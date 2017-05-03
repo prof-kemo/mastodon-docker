@@ -1,0 +1,131 @@
+version: "3"
+services:
+
+  db:
+    restart: always
+    image: postgres:alpine
+    networks:
+      internal:
+## Uncomment to enable DB persistance
+    volumes:
+      - mastodon_postgres:/var/lib/postgresql/data
+
+  redis:
+    restart: always
+    image: redis:alpine
+## Uncomment to enable REDIS persistance
+    networks:
+      internal:
+    volumes:
+      - mastodon_redis:/data
+
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.nginx 
+    image: mastodon_frontend:alpine
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web
+      - streaming
+    networks:
+      internal:
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - certbot:/etc/letsencrypt
+      #- certbot:/certbot
+
+  web:
+    restart: always
+    build: .
+    image: gargron/mastodon
+    env_file: .env.production
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+#    ports:
+#      - "3000:3000"
+    depends_on:
+      - db
+      - redis
+    networks:
+      internal:
+        aliases:
+          - mastodon_web
+    volumes:
+      #- ./public/assets:/mastodon/public/assets
+      - assets:/mastodon/public/assets
+      #- ./public/system:/mastodon/public/system
+      - system:/mastodon/public/system
+
+  streaming:
+    restart: always
+    build: .
+    image: gargron/mastodon
+    env_file: .env.production
+    command: npm run start
+#    ports:
+#      - "4000:4000"
+    networks:
+      internal:
+        aliases:
+          - mastodon_streaming
+    depends_on:
+      - db
+      - redis
+
+  sidekiq:
+    restart: always
+    build: .
+    image: gargron/mastodon
+    env_file: .env.production
+    command: bundle exec sidekiq -q default -q mailers -q pull -q push
+    depends_on:
+      - db
+      - redis
+    networks:
+      internal:
+    volumes:
+      #- ./public/system:/mastodon/public/system
+      - system:/mastodon/public/system
+
+
+#  app:
+#    image: zembutsu/docker-sample-nginx
+#    deploy:
+#      replicas: 1
+#      restart_policy:
+#        condition: on-failure
+##    ports:
+##      - "3000:80"
+#    networks:
+#      internal:
+#        aliases:
+#          - app
+#    volumes:
+#      - /etc/localtime:/etc/localtime:ro
+
+
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - certbot:/certbot
+
+
+networks:
+  internal:
+
+volumes:
+  certbot:
+    external: true
+  mastodon_postgres:
+  mastodon_redis:
+  assets:
+  system:
+
