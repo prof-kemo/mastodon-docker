@@ -261,6 +261,10 @@ $ docker-compose logs -f
 あとは、ご自由にお使いください。
 
 
+### cron設定
+
+(ToDo)
+
 ## Feedbak 
 
 Issue や Pull Request でどうぞ
