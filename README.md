@@ -44,16 +44,16 @@ curl -L https://github.com/docker/compose/releases/download/1.12.0/docker-compos
 chmod +x /usr/local/bin/docker-compose
 ```
 
-作業用 docker アカウントを作成します（root権限で全ての Docker 操作が可能なため、事実上の root ユーザとなりますので取り扱いにはご注意ください。あるいは、この手順を省略し、一般ユーザから sudo docker のように実行しても構いません）。
+作業用 mastodon アカウントを作成します（root権限で全ての Docker 操作が可能なため、事実上の root ユーザとなりますので取り扱いにはご注意ください。あるいは、この手順を省略し、一般ユーザから sudo mastodon のように実行しても構いません）。
 
 ```
-# /usr/sbin/adduser -g docker docker
+# /usr/sbin/adduser -g docker mastodon
 ```
 
 ユーザを切り替えます。
 
 ```
-# su - docker
+# su - mastodon
 ```
 
 最後にバージョン確認です。Server: のバージョンが表示されていれば正常です。表示されない場合は Docker Engine（dockerdデーモン）が起動しているかどうか、root 権限（正確には /var/run/docker.sock のアクセス権限があるかどうか）をご確認ください。
@@ -80,7 +80,7 @@ Server:
 
 ### Mastodon のセットアップ
 
-GitHub のリポジトリから、ソースコードをダウンロードします。ここでは /home/docker/ ディレクトリ以下での作業を想定していますが、任意の場所でも実行できます。
+GitHub のリポジトリから、ソースコードをダウンロードします。ここでは /home/mastodon/ ディレクトリ以下での作業を想定していますが、任意の場所でも実行できます。
 
 ```
 $ cd
