@@ -6,15 +6,16 @@
 ## 概要
 
 - Docker Compose で Mastodon 実行環境をセットアップ
- - オリジナルの docker-compose.yml との主な違い
-  - Nginx ( Let's Encrypt 対応 SSL ) 設定
-  - Let's Encrypt (certbot) 用設定
-  - Exim4 ( メール送信用) )
-  - 内部通信用ネットワークの定義
+
+- オリジナルの docker-compose.yml との主な違い
+ - Nginx ( Let's Encrypt 対応 SSL ) 設定
+ - Let's Encrypt (certbot) 用設定
+ - Exim4 ( メール送信用) )
+ - 内部通信用ネットワークの定義
 
 ## 事前準備
 
-- Mastodon を動かすためのサーバに対して、ホスト名(Aレコード)が割り当てられていること
+- Mastodon を動かすためのサーバに対して、ホスト名(Aレコード)などが割り当てられていること
 - Docker CE 動作環境
 
 ## 設定手順
